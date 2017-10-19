@@ -1,4 +1,10 @@
-﻿Function MainMenu {
+﻿# Include helper scripts by relative path
+$IncludeDir = Split-Path -parent $MyInvocation.MyCommand.Path
+
+Import-Module $IncludeDir\includes\GUI_funcs.ps1 -Force
+
+
+Function MainMenu {
     <# 
     Main Menu is the initial startup for the application, user is presented with a brief explaination as well as an about menu for version checking
         Future implementation:
@@ -8,7 +14,6 @@
     #>
 
     Add-Type -AssemblyName System.Windows.Forms
-
     $401CPT = New-Object system.Windows.Forms.Form
     $401CPT.Text = "T.0.M.B - Main Menu"
     $401CPT.TopMost = $true
@@ -26,23 +31,8 @@
     $MainMenu_Title.Font = "Microsoft Sans Serif,16"
     $401CPT.controls.Add($MainMenu_Title)
 
-    $MainMenu_Next = New-Object system.windows.Forms.Button
-    $MainMenu_Next.Text = ">> Next"
-    $MainMenu_Next.Width = 90
-    $MainMenu_Next.Height = 30
-    $MainMenu_Next.Add_Click({MissionCreate($401CPT.Dispose())})
-    $MainMenu_Next.location = new-object system.drawing.point(505,285)
-    $MainMenu_Next.Font = "Microsoft Sans Serif,10"
-    $401CPT.controls.Add($MainMenu_Next)
-
-    $MainMenu_About = New-Object system.windows.Forms.Button
-    $MainMenu_About.Text = "About"
-    $MainMenu_About.Width = 90
-    $MainMenu_About.Height = 30
-    $MainMenu_About.Add_Click({About($401CPT.Dispose())})
-    $MainMenu_About.location = new-object system.drawing.point(15,285)
-    $MainMenu_About.Font = "Microsoft Sans Serif,10"
-    $401CPT.controls.Add($MainMenu_About)
+    AddButton ">> Next" 90 30 505 285 10 {MissionCreate($401CPT.Dispose())} $401CPT
+    AddButton "About" 90 30 15 285 10 {About($401CPT.Dispose())} $401CPT
 
     $MainMenuText = New-Object system.windows.Forms.TextBox
     $MainMenuText.Multiline = $true
@@ -87,14 +77,7 @@ Function About {
     $AboutMenu.Height = 375
     $AboutMenu.StartPosition = "CenterScreen"
 
-    $Close_BackToMainMenu = New-Object system.windows.Forms.Button
-    $Close_BackToMainMenu.Text = "Close"
-    $Close_BackToMainMenu.Width = 90
-    $Close_BackToMainMenu.Height = 30
-    $Close_BackToMainMenu.Add_Click({MainMenu($AboutMenu.Dispose())})
-    $Close_BackToMainMenu.location = new-object system.drawing.point(505,285)
-    $Close_BackToMainMenu.Font = "Microsoft Sans Serif,10"
-    $AboutMenu.controls.Add($Close_BackToMainMenu)
+    AddButton "Close" 90 30 505 285 10 {MainMenu($AboutMenu.Dispose())} $AboutMenu
 
     $About_MainMenu = New-Object system.windows.Forms.TextBox
     $About_MainMenu.Multiline = $true
@@ -140,14 +123,7 @@ $global:Folder = ""
     $MissionCreate_Text.Font = "Microsoft Sans Serif,23"
     $MissionName.controls.Add($MissionCreate_Text)
 
-    $MissionCreate_Help = New-Object system.windows.Forms.Button
-    $MissionCreate_Help.Text = "Help"
-    $MissionCreate_Help.Width = 90
-    $MissionCreate_Help.Height = 30
-    $MissionCreate_Help.Add_Click({MissionCreate_HelpMenu($MissionName.Dispose())})
-    $MissionCreate_Help.location = new-object system.drawing.point(15,285)
-    $MissionCreate_Help.Font = "Microsoft Sans Serif,10"
-    $MissionName.controls.Add($MissionCreate_Help)
+    AddButton "Help" 90 30 15 285 10 {MissionCreate_HelpMenu($MissionName.Dispose())} $MissionName
 
     $MissionCreate_UserInput = New-Object system.windows.Forms.TextBox
     $MissionCreate_UserInput.Width = 349
@@ -158,18 +134,13 @@ $global:Folder = ""
     $MissionCreate_UserInput.Add_TextChanged({ $MissionCreate_Next.Enabled = If($This.Text) {$true} Else {$false} })
     $MissionName.Controls.Add($MissionCreate_UserInput)
     $Folder = $MissionCreate_UserInput
-           
-    $MissionCreate_Next = New-Object system.windows.Forms.Button
-    $MissionCreate_Next.Text = ">> Next"
-    $MissionCreate_Next.Width = 90
-    $MissionCreate_Next.Height = 30
-    $MissionCreate_Next.Enabled = $false
-    $MissionCreate_Next.Add_Click({
+    
+    $NextClickFunc = {
     MissionCreate_Button
     Authentication($MissionName.Dispose())
-    })
-    $MissionCreate_Next.location = new-object system.drawing.point(505,285)
-    $MissionCreate_Next.Font = "Microsoft Sans Serif,10"
+    }
+    $MissionCreate_Next = GetButton ">> Next" 90 30 505 285 10 $NextClickFunc $MissionName
+    $MissionCreate_Next.Enabled = $false
     $MissionName.controls.Add($MissionCreate_Next)
 
     $MissionCreate_Previous = New-Object system.windows.Forms.Button
