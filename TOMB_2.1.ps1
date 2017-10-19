@@ -143,15 +143,7 @@ $global:Folder = ""
     $MissionCreate_Next.Enabled = $false
     $MissionName.controls.Add($MissionCreate_Next)
 
-    $MissionCreate_Previous = New-Object system.windows.Forms.Button
-    $MissionCreate_Previous.Text = "Prev <<"
-    $MissionCreate_Previous.Width = 90
-    $MissionCreate_Previous.Height = 30
-    $MissionCreate_Previous.Add_Click({MainMenu($MissionName.Dispose())})
-    $MissionCreate_Previous.location = new-object system.drawing.point(400,285)
-    $MissionCreate_Previous.Font = "Microsoft Sans Serif,10"
-    $MissionName.controls.Add($MissionCreate_Previous)
-
+    AddButton "Prev <<" 90 30 400 285 10 {MainMenu($MissionName.Dispose())} $MissionName
 
     Function MissionCreate_Button {
             $global:Folder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(‘.\’)+"\"+$MissionCreate_UserInput.Text
@@ -184,14 +176,7 @@ All additional documents will be created inside of this folder"
     $HelpMenu_Title.Font = "Microsoft Sans Serif,8"
     $HelpMenu.controls.Add($HelpMenu_Title)
 
-    $Close_BackToMissionCreate = New-Object system.windows.Forms.Button
-    $Close_BackToMissionCreate.Text = "Close"
-    $Close_BackToMissionCreate.Width = 90
-    $Close_BackToMissionCreate.Height = 30
-    $Close_BackToMissionCreate.Add_Click({MissionCreate($HelpMenu.Dispose())})
-    $Close_BackToMissionCreate.location = new-object system.drawing.point(505,285)
-    $Close_BackToMissionCreate.Font = "Microsoft Sans Serif,10"
-    $HelpMenu.controls.Add($Close_BackToMissionCreate)
+    AddButton "Close" 90 30 505 285 10 {MissionCreate($HelpMenu.Dispose())} $HelpMenu
 
     [void]$HelpMenu.ShowDialog()
     $HelpMenu.Dispose()
@@ -283,33 +268,10 @@ Function Authentication {
     $Auth_Pass_Input.Font = "Microsoft Sans Serif,10"
     $AuthMenu.controls.Add($Auth_Pass_Input)
 
-    $Auth_Help = New-Object system.windows.Forms.Button
-    $Auth_Help.Text = "Help"
-    $Auth_Help.Width = 90
-    $Auth_Help.Height = 30
-    #Need to add this menu still.
-    #$Auth_Help.Add_Click({AuthenticationHelp($AuthMenu.Dispose())})
-    $Auth_Help.location = new-object system.drawing.point(15,285)
-    $Auth_Help.Font = "Microsoft Sans Serif,10"
-    $AuthMenu.controls.Add($Auth_Help)
-
-    $Auth_Prev = New-Object system.windows.Forms.Button
-    $Auth_Prev.Text = "Prev <<"
-    $Auth_Prev.Width = 90
-    $Auth_Prev.Height = 30
-    $Auth_Prev.Add_Click({MissionCreate($AuthMenu.Dispose())})
-    $Auth_Prev.location = new-object system.drawing.point(400,285)
-    $Auth_Prev.Font = "Microsoft Sans Serif,10"
-    $AuthMenu.controls.Add($Auth_Prev)
-
-    $Auth_Next = New-Object system.windows.Forms.Button
-    $Auth_Next.Text = ">> Next"
-    $Auth_Next.Width = 90
-    $Auth_Next.Height = 30
-    $Auth_Next.Add_Click({LocalDomainSelect($AuthMenu.Dispose())})
-    $Auth_Next.location = new-object system.drawing.point(505,285)
-    $Auth_Next.Font = "Microsoft Sans Serif,10"
-    $AuthMenu.controls.Add($Auth_Next)
+    #Need to add this menu still: {AuthenticationHelp($AuthMenu.Dispose())}
+    AddButton "Help" 90 30 15 285 10 {AuthenticationHelp($AuthMenu.Dispose())} $AuthMenu
+    AddButton "Prev <<" 90 30 400 285 10 {MissionCreate($AuthMenu.Dispose())} $AuthMenu
+    AddButton "Next >>" 90 30 505 285 10 {LocalDomainSelect($AuthMenu.Dispose())} $AuthMenu
 
     Function AuthSelection {
         if ($Auth_UserPass.Checked -eq $true){
