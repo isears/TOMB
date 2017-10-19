@@ -155,14 +155,7 @@ $global:Folder = ""
     $MissionCreate_UserInput.Text = "$global:Folder"
     $MissionCreate_UserInput.location = new-object system.drawing.point(128,134)
     $MissionCreate_UserInput.Font = "Microsoft Sans Serif,10"
-    $MissionCreate_UserInput.Add_TextChanged({
-        If($This.Text ){
-            $MissionCreate_Next.Enabled = $true
-            }
-        Else{
-            $MissionCreate_Next.Enabled = $false
-            }
-    }) 
+    $MissionCreate_UserInput.Add_TextChanged({ $MissionCreate_Next.Enabled = If($This.Text) {$true} Else {$false} })
     $MissionName.Controls.Add($MissionCreate_UserInput)
     $Folder = $MissionCreate_UserInput
            
